@@ -47,12 +47,12 @@ void loop() {
   TEMP -= T2;
 
   // Affichage
-  Serial.print("Température compensée (°C) : ");
+  //Serial.print("Température compensée (°C) : ");// à commenter pour serial plotter
   
 
-  Serial.println(TEMP / 100.0);  // Valeur en degrés Celsius
+  Serial.println((float)TEMP / 100.0);  // Valeur en degrés Celsius
   
-  Serial.println(micros()*pow(10,-6));
+  
 
   delay(1000);
 }
