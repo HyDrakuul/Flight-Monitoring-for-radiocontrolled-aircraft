@@ -6,7 +6,7 @@
 #define MS5607_ADDRESS 0x76  // Adresse I2C du capteur
 
 
-SoftwareSerial SoftSerial(2, 3); // RX, TX
+SoftwareSerial SoftSerial(3, 2); // RX, TX
 unsigned char buffer[64];        // Buffer de stockage
 int count = 0;                   // Compteur de buffer
 
@@ -15,7 +15,7 @@ const int chipSelect = 4;        // Broche CS pour la carte SD
 File dataFile;                   // Fichier pour stocker les données
 
 
-SoftwareSerial Radio(4, 5); // RX, TX
+SoftwareSerial Radio(2, 3); // RX, TX
 
 Adafruit_LIS3DH lis = Adafruit_LIS3DH();
 File myFile;
