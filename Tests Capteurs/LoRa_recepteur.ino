@@ -1,5 +1,5 @@
 #include <SoftwareSerial.h>
-SoftwareSerial Radio(2, 3); // RX, TX
+SoftwareSerial Radio(4, 5); // RX, TX
 
 void setup() {
   Serial.begin(9600);   // Pour voir la réception
