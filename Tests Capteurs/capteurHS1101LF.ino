@@ -1,4 +1,4 @@
-int sensorPin = 4;              // 220 or 1k resistor connected to this pin
+int sensorPin = 6;              // 220 or 1k resistor connected to this pin
 long result = 0;
 void setup()                    // run once, when the sketch starts
 {
