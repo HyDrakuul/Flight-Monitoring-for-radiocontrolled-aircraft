@@ -3,9 +3,8 @@
 #include <SPI.h>
 #include <SD.h>
 #include <SoftwareSerial.h>
-#include <SoftwareSerial.h>
-#include <SPI.h>
-#include <SD.h>
+#define MS5607_ADDRESS 0x76  // Adresse I2C du capteur
+
 
 SoftwareSerial SoftSerial(2, 3); // RX, TX
 unsigned char buffer[64];        // Buffer de stockage
@@ -16,7 +15,7 @@ const int chipSelect = 4;        // Broche CS pour la carte SD
 File dataFile;                   // Fichier pour stocker les données
 
 
-SoftwareSerial Radio(2, 3); // RX, TX
+SoftwareSerial Radio(4, 5); // RX, TX
 
 Adafruit_LIS3DH lis = Adafruit_LIS3DH();
 File myFile;
@@ -25,31 +24,29 @@ float time = 0;
 bool enregistrementTermine = false;
 
 
-#include <Wire.h>
-#define MS5607_ADDRESS 0x76  // Adresse I2C du capteur
+
+
 uint16_t C[7];  // Coefficients de calibration (C1 à C6)
 
 int sensorPin = 4;              // 220 or 1k resistor connected to this pin
 long result = 0;
 void setup()                    // run once, when the sketch starts
 {
-   Serial.begin(9600);
-   Wire.begin();
+  Serial.begin(9600);
+  Wire.begin();
   Radio.begin(9600);     // Vers GAMMA62M
-
   delay(2000); // Laisse le module démarrer
-  SoftSerial.begin(9600);      // Port série pour le GPS
-    
-    // Initialisation de la carte SD
-  Serial.print("Initialisation de la carte SD...");
-    
+  SoftSerial.begin(9600);      // Port série pour le GPS 
+
+  // Initialisation de la carte SD
+  Serial.print("Initialisation de la carte SD..."); 
   if (!SD.begin(chipSelect)) {
       Serial.println("Erreur d'initialisation de la carte SD!");
       return;
     }
   Serial.println("Carte SD initialisée.");
     
-    // Création ou ouverture du fichier de données
+  // Création ou ouverture du fichier de données
   dataFile = SD.open("gpsdata.txt", FILE_WRITE);
   if (dataFile) {
     Serial.println("Fichier gpsdata.txt ouvert ou créé.");
@@ -58,18 +55,13 @@ void setup()                    // run once, when the sketch starts
     } else {
       Serial.println("Erreur lors de l'ouverture de gpsdata.txt!");
     }
-
-  
-
   while (!Serial); // attendre le port série
-
   Serial.print("Initialisation carte SD...");
   if (!SD.begin(4)) {
     Serial.println("Échec !");
     while (1);
   }
   Serial.println("Carte SD OK.");
-
   if (!lis.begin(0x19)) {
     Serial.println("Capteur LIS3DH non detecte !");
     while (1);
@@ -84,13 +76,11 @@ void setup()                    // run once, when the sketch starts
     nomFichier = "acc" + String(index) + ".txt";
     index++;
   } while (SD.exists(nomFichier));
-
   myFile = SD.open(nomFichier.c_str(), FILE_WRITE);
   if (!myFile) {
     Serial.println("Erreur ouverture fichier !");
     while (1);
   }
-
   Serial.print("Enregistrement dans : ");
   Serial.println(nomFichier);
   Serial.println("Temps (s), X (m/s2), Y (m/s2), Z (m/s2)");
@@ -110,7 +100,7 @@ void setup()                    // run once, when the sketch starts
   Radio.println("Hello depuis Arduino 1 !");
   Serial.println("start");      // a personal quirk 
 }
-void loop()                     // run over and over again
+void loop()                   
 {
   Radio.println("----------------------------------------------------------"); 
   Serial.println(RCtime(sensorPin));
