@@ -77,9 +77,11 @@ void loop() {
   //Serial.println(F("--------------------------"));
 
   float humidity = ((((RCtime(SENSOR_PIN)) *pow(10,-6)/1e6) - 163.33e-12) / 3.33e-11);
-  Serial2.print(F("Humidite: ")); Serial2.print(humidity);
-  Serial2.print(F(","));
-  Serial.print(F("Humidite: ")); Serial.println(humidity);
+ 
+  Serial.print(F("Humidite: ")); Serial.print(humidity);
+  Serial.println(" %");
+
+
 
   // Température
   Wire.beginTransmission(MS5607_ADDRESS);
@@ -108,14 +110,28 @@ void loop() {
   sensors_event_t event;
   lis.getEvent(&event);
   time = (millis()-startime)/1000;
-  
+  Serial.print("Temps écoulé depuis le lancement du programme: ");
   Serial.print(time, 4); 
-  Serial.print(F(", "));
+  Serial.println(F(" s"));
+  Serial.println("===Accéléromètre===");
+  Serial.print("X:");
   Serial.print(event.acceleration.x); 
+  Serial.print(" m/s^2");
   Serial.print(F(", "));
+  Serial.print("Y:");
   Serial.print(event.acceleration.y); 
+  Serial.print(" m/s^2");
   Serial.print(F(", "));
-  Serial.println(event.acceleration.z);
+  Serial.print("Z:");
+  Serial.print(event.acceleration.z);
+  Serial.println(" m/s^2");
+  float ax = event.acceleration.x;
+  float ay = event.acceleration.y;
+  float az = event.acceleration.z;
+
+  Serial.print("Accélération totale: ");Serial.print(sqrt(ax*ax +ay*ay +az*az));
+  Serial.println(" m/s^2");
+
   
 
   // GPS
@@ -149,21 +165,22 @@ void loop() {
     //formate sous forme de trames pour faciliter le traitement.
     String trame = "";
             
-    trame += "Humidite: " + String(humidity, 2) + ",";
-    trame += "Temp (C): " + String(temperature, 2) + ",";
-    trame += String(time, 2) + ",";
-    trame += String(event.acceleration.x, 2) + ",";
-    trame += String(event.acceleration.y, 2) + ",";
-    trame += String(event.acceleration.z, 2) + ",";
+    trame += "Humidite:" + String(humidity, 2) + ",";
+    trame += "Temp (C):" + String(temperature, 2) + ",";
+    trame += "Time:"+String(time, 2) + ",";
+    trame += "X:"+String(event.acceleration.x, 2) + ",";
+    trame += "Y:"+String(event.acceleration.y, 2) + ",";
+    trame += "Z:"+String(event.acceleration.z, 2) + ",";
 
     if (gps.location.isUpdated() && gps.time.isValid()) {
-      trame += "Lat: " + String(gps.location.lat(), 6) + ",";
-      trame += "Lng: " + String(gps.location.lng(), 6) + ",";
-      trame += "Altitude  : " + String(gps.altitude.meters(), 2) + ",";
-      trame += "Vitesse   : " + String(gps.speed.kmph(), 2) + ",";
-      trame += "Sat: " + String(gps.satellites.value()) + ",";
+      trame += "Lat:" + String(gps.location.lat(), 6) + ",";
+      trame += "Lng:" + String(gps.location.lng(), 6) + ",";
+      trame += "Altitude:" + String(gps.altitude.meters(), 2) + ",";
+      trame += "Vitesse:" + String(gps.speed.kmph(), 2) + ",";
+      trame += "Sat:" + String(gps.satellites.value()) + ",";
       trame += "Fix: OK,";
-      trame += "Heure     : " + String(gps.time.hour()) + ":" + String(gps.time.minute()) + ":" + String(gps.time.second());
+      trame += "Heure:" + String(gps.time.hour()) + ":" + String(gps.time.minute()) + ":" + String(gps.time.second());
+      trame +="\n";
       Serial2.println(trame);
       Serial.println("Trame envoyée:");
       Serial.println(trame);
@@ -190,6 +207,8 @@ void loop() {
     myFile.print("m/(s)^2; ");
     myFile.print("Selon z: ");myFile.print(event.acceleration.z);
     myFile.print("m/(s)^2; ");
+    myFile.print("Accélération totale: ");myFile.print(sqrt(ax*ax +ay*ay +az*az));
+    myFile.println(" m/(s)^2");
     myFile.close();
     Serial.println("Données de vol enregistrées !");
   } else {
