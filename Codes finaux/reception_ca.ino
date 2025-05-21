@@ -1,6 +1,7 @@
+//code instabke, recharger plusieurs fois permet d'ameliorer les resultats
 #include <SoftwareSerial.h>
 #include <LiquidCrystal.h>
-
+//ecran lcd
 LiquidCrystal lcd(12, 11, 6, 4, 3, 2);
 SoftwareSerial Radio(5, 7);  // RX, TX
 
@@ -16,7 +17,7 @@ void setup() {
   Radio.begin(9600);
   Serial.println("Attente données...");
 }
-
+//l'émetteur envoie maitenant des trames de données (lignes ou les données sont séparées par des virgules) qu'il faut décoder maais bcp de corruption
 void loop() {
   // Réception non bloquante
   while (Radio.available()) {
@@ -53,7 +54,7 @@ void loop() {
       lcd.clear();  // Effacer uniquement si de nouvelles données ont été reçues
       newData = false;
     }
-
+  //permet de changer d'écran
     switch (displayPage) {
       case 0:
         lcd.setCursor(0, 0);lcd.print("                "); 
