@@ -276,7 +276,7 @@ We welcome contributions! Here's how you can help:
 ---
 
 **Last Updated**: March 2026  
-**Project Repository**: https://github.com/HyDrakuul/Flight-Monitoring-for-radiocontrolled-aircraft
+**Project Repository**: https://github.com/glouisin/Flight-Monitoring-for-radiocontrolled-aircraft
 
 
 
